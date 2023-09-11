@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="geekbears.com.flutter_anyline_tire_tread_scanner" >
+
+    <application
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        <activity
+            android:name=".activities.ScannerActivity"
+            android:exported="false"
+            android:screenOrientation="sensorLandscape"/>
+    </application>
+
+</manifest>

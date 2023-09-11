@@ -1,0 +1,29 @@
+PODS:
+  - AnylineTireTreadSdk (2.1.0)
+  - Flutter (1.0.0)
+  - flutter_anyline_tire_tread_scanner (1.0.0):
+    - AnylineTireTreadSdk (= 2.1.0)
+    - Flutter
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - flutter_anyline_tire_tread_scanner (from `.symlinks/plugins/flutter_anyline_tire_tread_scanner/ios`)
+
+SPEC REPOS:
+  trunk:
+    - AnylineTireTreadSdk
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  flutter_anyline_tire_tread_scanner:
+    :path: ".symlinks/plugins/flutter_anyline_tire_tread_scanner/ios"
+
+SPEC CHECKSUMS:
+  AnylineTireTreadSdk: aa721573bf5f26b08dee5fb974487a048e45d2b7
+  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  flutter_anyline_tire_tread_scanner: d69ee76013f89ec7a37f00dce4ce77bbb6a0211e
+
+PODFILE CHECKSUM: 8f0d2258d07e3e626e45bf19cc1ff597cd33373b
+
+COCOAPODS: 1.12.1
