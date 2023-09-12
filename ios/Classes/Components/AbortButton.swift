@@ -19,10 +19,11 @@ final class AbortButton: UIButton {
 // MARK: - Private func
 private extension AbortButton {
     func setup() {
-        setTitle("Abort", for: .normal)
+        setTitle("Close", for: .normal)
         setTitleColor(UIColor.white, for: .normal)
         titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
-        backgroundColor = UIColor(rgb: 0x0BA9C6)
+//        backgroundColor = UIColor(rgb: 0x0BA9C6)
+        backgroundColor = UIColor.red
         contentHorizontalAlignment = .center
         layer.maskedCorners = [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
         layer.cornerRadius = cornerRadius
