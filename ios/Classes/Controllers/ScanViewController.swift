@@ -163,7 +163,7 @@ extension ScanViewController: TireTreadScanViewCallback {
             if (!self!.isUploading) {
                 self!.isUploading = true
                 self!.distanceStatusLabel.textColor = UIColor.white
-                self!.distanceStatusLabel.text = "Uploading, please wait..."
+                self!.distanceStatusLabel.text = "Uploading, please do not move the camera"
             }
         }
     }

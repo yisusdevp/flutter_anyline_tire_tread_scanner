@@ -29,6 +29,7 @@ class ScannerActivity() : AppCompatActivity(), TireTreadScanViewCallback {
     private val scanTimer : Timer = Timer()
     private var abortButtonDrawable: GradientDrawable = GradientDrawable()
     private var scanButtonDrawable: GradientDrawable = GradientDrawable()
+    private var isUploading: Boolean = false
 
     private lateinit var measurementSystem: MeasurementSystem
     private lateinit var tireTreadScanView: TireTreadScanView
@@ -112,6 +113,11 @@ class ScannerActivity() : AppCompatActivity(), TireTreadScanViewCallback {
         newDistance: Float
     ) {
         super.onDistanceChanged(uuid, previousStatus, newStatus, previousDistance, newDistance)
+
+        if (isUploading) {
+            return
+        }
+
         val parsedDistance: String = if (measurementSystem == MeasurementSystem.Imperial) {
             "${inchStringToTriple(inchToFractionString(newDistance.toDouble())).first}"
         } else {
@@ -150,11 +156,16 @@ class ScannerActivity() : AppCompatActivity(), TireTreadScanViewCallback {
             scanButton.setTextColor(ColorStateList.valueOf(resources.getColor(R.color.silver)))
         }
 
-        distanceTextView.text = "Uploading your photo, please wait..."
+        if (!isUploading) {
+            isUploading = true
+            distanceTextView.text = "Uploading, please do not move the camera"
+            distanceTextView.setTextColor(ColorStateList.valueOf(resources.getColor(R.color.white)))
+        }
     }
 
     override fun onUploadCompleted(uuid: String?) {
         super.onUploadCompleted(uuid)
+        progressBar.visibility = View.GONE
         setActivityResultExtras(uuid, "upload-completed", null)
 
         finish()
