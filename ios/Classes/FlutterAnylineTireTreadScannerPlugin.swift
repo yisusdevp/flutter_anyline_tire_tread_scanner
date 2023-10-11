@@ -177,25 +177,4 @@ public class FlutterAnylineTireTreadScannerPlugin: NSObject, FlutterPlugin, Flut
             )
         }
     }
-    
-    
-//    private func getPDFReport(result: FlutterResult) async {
-//        do {
-//            let kotlinByteArray = anylineSDK.getTreadDepthReportPdf(measurementUuid: self.uuid) { _ in }
-//
-//            // Convert Kotlin ByteArray to Swift Data
-//            let data = kotlinByteArray.toNSData()
-//
-//            result(data)
-//
-//        } catch {
-//            result(
-//              FlutterError(
-//                code: "FlutterAnylineTireTreadGetPDFReportError",
-//                message: "\(error)",
-//                details: nil
-//              )
-//            )
-//        }
-//    }
 }
