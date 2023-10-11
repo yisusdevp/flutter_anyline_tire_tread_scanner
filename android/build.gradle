@@ -74,7 +74,7 @@ dependencies {
 
     // Anyline Tire Tread SDK dependency
     // ideally, you should pin (at least) the Major version of the SDK to avoid unexpected breaking changes
-    implementation 'io.anyline.tiretread.sdk:shared:2.1.4'
+    implementation 'io.anyline.tiretread.sdk:shared:2.2.0'
 
     // Include the 'Compose' dependency to be able to
     // integrate the TireTreadScanView in your Pages
