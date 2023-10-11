@@ -18,8 +18,9 @@ class ScanViewController: UIViewController, ScannerViewControllerHolder {
     private let interval = 0.1 // Time interval to update progressView
     private let scanProgress = ScanProgress()
     private let abortButton = AbortButton()
-//    private let scanButton = ScanButton()
+    private let scanButton = ScanButton()
     private let distanceStatusLabel = DistanceStatusLabel()
+    private var isUploading = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,15 +32,15 @@ class ScanViewController: UIViewController, ScannerViewControllerHolder {
         abortButton.frame = CGRect(x: 0, y: 30, width: 160, height: 50)
         abortButton.addTarget(self, action: #selector(onAbort), for: .touchUpInside)
         
-//        scanButton.frame = CGRect(x: self.view.bounds.size.width - 160, y: 30, width: 160, height: 50)
-//        scanButton.addTarget(self, action: #selector(onScan), for: .touchUpInside)
+       scanButton.frame = CGRect(x: self.view.bounds.size.width - 160, y: 30, width: 160, height: 50)
+       scanButton.addTarget(self, action: #selector(onScan), for: .touchUpInside)
         
         distanceStatusLabel.frame = CGRect(x: 200, y: self.view.bounds.size.height - 100, width: self.view.bounds.size.width - 400, height: 80)
         
         
         self.view.addSubview(scanProgress)
         self.view.addSubview(abortButton)
-//        self.view.addSubview(scanButton)
+       self.view.addSubview(scanButton)
         self.view.addSubview(distanceStatusLabel)
 
     }
@@ -98,12 +99,12 @@ class ScanViewController: UIViewController, ScannerViewControllerHolder {
     
     private func startScanning() {
         TireTreadScanner.companion.instance.startScanning()
-//        scanButton.setTitle("Stop", for: .normal)
+       scanButton.setTitle("Stop", for: .normal)
     }
     
     private func stopScanning() {
         TireTreadScanner.companion.instance.stopScanning()
-//        scanButton.setTitle("Scan", for: .normal)
+       scanButton.setTitle("Scan", for: .normal)
     }
 }
 
@@ -112,7 +113,7 @@ private extension ScanViewController {
 
         let config = TireTreadScanViewConfig(
             measurementSystem: measurementSystem == "metric" ? .metric : .imperial,
-            useDefaultUi: true,
+            useDefaultUi: false,
             useDefaultHaptic: true
         )
 
@@ -152,13 +153,19 @@ extension ScanViewController: TireTreadScanViewCallback {
     }
     
     func onImageUploaded(uuid: String?, uploaded: Int32, total: Int32) {
-//        if (scanButton.isEnabled) {
-//            scanButton.isEnabled = false
-//            scanButton.backgroundColor = UIColor(rgb: 0xE1E1E1)
-//            scanButton.setTitleColor(UIColor(rgb: 0xBFBFBF), for: .normal)
-//        }
-        
-        self.distanceStatusLabel.text = "Uploading your photo, please wait..."
+        DispatchQueue.main.async { [weak self] in
+            if (self!.scanButton.isEnabled) {
+                self!.scanButton.isEnabled = false
+                self!.scanButton.backgroundColor = UIColor(rgb: 0xE1E1E1)
+                self!.scanButton.setTitleColor(UIColor(rgb: 0xBFBFBF), for: .normal)
+            }
+            
+            if (!self!.isUploading) {
+                self!.isUploading = true
+                self!.distanceStatusLabel.textColor = UIColor.white
+                self!.distanceStatusLabel.text = "Uploading, please wait..."
+            }
+        }
     }
 
     func onScanAbort(uuid: String?) {
@@ -173,14 +180,18 @@ extension ScanViewController: TireTreadScanViewCallback {
 
     
     func onFocusFound(uuid: String?) {
-//        if (!self.scanButton.isEnabled) {
-//            self.scanButton.isEnabled = true
-//            self.scanButton.setTitleColor(UIColor.white, for: .normal)
-//            self.scanButton.backgroundColor = UIColor(rgb: 0x0BA9C6)
-//        }
+       if (!self.scanButton.isEnabled) {
+           self.scanButton.isEnabled = true
+           self.scanButton.setTitleColor(UIColor.white, for: .normal)
+           self.scanButton.backgroundColor = UIColor(rgb: 0x0BA9C6)
+       }
     }
     
     func onUploadCompleted(uuid: String?) {
+        DispatchQueue.main.async { [weak self] in
+            self?.scanProgress.isHidden = true
+        }
+        
         self.onTreadScannerEvent!("upload-completed", uuid, nil)
         self.dismiss(animated: true)
     }
@@ -201,6 +212,10 @@ extension ScanViewController: TireTreadScanViewCallback {
     ///
     /// Note: The distance values are provided in millimeters if the metric system is selected (`UserDefaultsManager.shared.imperialSystem = false`), and in inches if the imperial system is selected (`UserDefaultsManager.shared.imperialSystem = true`).
     func onDistanceChanged(uuid: String?, previousStatus: DistanceStatus, newStatus: DistanceStatus, previousDistance: Float, newDistance: Float) {
+        if (self.isUploading) {
+            return
+        }
+            
          if Int(newDistance) != Int(previousDistance) {
              let distance = measurementSystem != "metric" ? (newDistance * 2.54) : (newDistance / 10.0)
              DispatchQueue.main.async { [weak self] in

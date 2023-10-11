@@ -15,7 +15,7 @@ A new Flutter plugin project.
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
-  s.dependency 'AnylineTireTreadSdk', '2.1.0'
+  s.dependency 'AnylineTireTreadSdk', '2.1.4'
   s.platform = :ios, '15.2'
 
   # Flutter.framework does not contain a i386 slice.
