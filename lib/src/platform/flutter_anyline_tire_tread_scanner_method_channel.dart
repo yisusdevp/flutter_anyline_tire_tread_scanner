@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+import 'package:flutter_anyline_tire_tread_scanner/src/core/exceptions.dart';
 
 import '../core/measurement_system.dart';
 import '../core/scanning_event.dart';
@@ -56,16 +57,28 @@ class AnylineTireTreadScannerMethodChannel extends AnylineTireTreadScannerPlatfo
     required String uuid,
     MeasurementSystem measurementSystem = MeasurementSystem.metric,
   }) async {
-    final result = await _methodChannel.invokeMethod(
-      'getTreadDepthResult',
-      {
-        'uuid': uuid,
-        'measurementSystem': measurementSystem.name,
-      },
-    );
+    try {
+      final result = await _methodChannel.invokeMethod(
+        'getTreadDepthResult',
+        {
+          'uuid': uuid,
+          'measurementSystem': measurementSystem.name,
+        },
+      );
 
-    if (result == null) return null;
+      if (result == null) return null;
 
-    return TreadDepthResult.fromMap(result!);
+      return TreadDepthResult.fromMap(result!);
+    } on PlatformException catch (e, strackTrace) {
+      if (e.code == "FlutterAnylineTireTreadGetTreadDepthReportResultFailed") {
+        throw GetTreadDepthReportResultFailed(
+          code: e.code,
+          message: e.message ?? "",
+          stackTrace: strackTrace,
+        );
+      } else {
+        rethrow;
+      }
+    }
   }
 }

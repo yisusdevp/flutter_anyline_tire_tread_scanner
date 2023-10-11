@@ -39,9 +39,9 @@ class MeasurementResult {
   });
 
   final double topTire;
-  final double leftTire;
-  final double middleTire;
-  final double rightTire;
+  final double? leftTire;
+  final double? middleTire;
+  final double? rightTire;
 
   factory MeasurementResult.fromMap(dynamic map) {
     return MeasurementResult(
